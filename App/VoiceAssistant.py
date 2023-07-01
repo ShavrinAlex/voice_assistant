@@ -27,9 +27,6 @@ class VoiceAssistant:
         """
         self.__speech_receiver.wake_word_detection()
         self.__speech_reproduces.reproduce_greetings()
-        start_work_flag = False
-        #while self.SpeechReceiver.wake_word_detection() == False: #заглушка для реализации с wwd
-            #continue
         while True:
             # старт записи речи с последующим выводом распознанной речи
             # и удалением записанного в микрофон аудио
@@ -40,19 +37,6 @@ class VoiceAssistant:
             print(self.__speech_string)
             if (self.__speech_string == 'пока'):
                 self.__speech_reproduces.reproduce_farewell_and_quit()
-            if start_work_flag == False: #первоначальная версия, с добавлением wwd будет удалено
-                start_work_flag = self.is_wake_word()
 
-            if start_work_flag:
-                # дальнейшая реализация command recognition
-                print("Начало работы")
-                return
 
-    def is_wake_word(self) -> bool:
-        """
-        Проверка, сказано ли пользователем "wake word" для начала работы
-        Checking whether the user says "wake word" to get started
-        :return:
-        """
-        return self.__speech_string == self.__wake_word
-        pass
+
