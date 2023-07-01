@@ -3,7 +3,13 @@ import wave                                 # creating and reading wav audio fil
 import json                                 # working with json files and json strings
 import speech_recognition                   # user speech recognition (Speech-To-Text)
 import os                                   # working with the file system
+import pvporcupine                          # wake word detection library
+from pvrecorder import PvRecorder           # record wake word detection
+from pathlib import Path                    # build path to file
 
+LAST_KEYWORDS_PATH = 'venv/Lib/site-packages/pvporcupine/resources/keyword_files/windows/wwd_ru.ppn'
+ACCESS_KEY = "ovnQ/QcjpAvIZin1XfxN0ZeWQOG3Iy3EdxF+J9SM0+jStZBzZ774Ow=="
+LAST_MODEL_PATH = 'venv/Lib/site-packages/pvporcupine/lib/common/porcupine_params_ru.pv'
 
 class SpeechReceiver:
     """
@@ -85,9 +91,31 @@ class SpeechReceiver:
 
         return recognized_data
 
-    def wake_word_detection(self) -> bool:
+    def wake_word_detection(self):
         '''
         используя модуль porcupine находит слово для активации голосового асистента
         :return: Флаг, уведомляющий о том, что wake word найдено.
         '''
+        project_path = open(str(Path('App/SpeechReceiver/ProjectPath.txt')),'r')
+        work_dir = Path(project_path.read())
+        access_key = ACCESS_KEY
+        keywords_path = [str(work_dir/LAST_KEYWORDS_PATH)]
+        model_path = str(work_dir/LAST_MODEL_PATH)
+        porcupine = pvporcupine.create(access_key=access_key, keyword_paths=keywords_path,
+                                       model_path=model_path)
+        recoder = PvRecorder(device_index=-1, frame_length=porcupine.frame_length)
+
+        try:
+            recoder.start()
+
+            while True:
+                keyword_index = porcupine.process(recoder.read())
+                if keyword_index >= 0:
+                    print('wake word detected,program start')
+                    break
+        except KeyboardInterrupt:
+            recoder.stop()
+        finally:
+            porcupine.delete()
+            recoder.delete()
         pass
