@@ -25,7 +25,7 @@ class VoiceAssistant:
         The main loop of the program. Launches the other modules and receives data from them.
         :return:
         """
-
+        self.__speech_receiver.wake_word_detection()
         self.__speech_reproduces.reproduce_greetings()
         start_work_flag = False
         #while self.SpeechReceiver.wake_word_detection() == False: #заглушка для реализации с wwd

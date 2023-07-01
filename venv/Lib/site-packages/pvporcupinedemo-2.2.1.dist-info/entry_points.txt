@@ -1,0 +1,4 @@
+[console_scripts]
+porcupine_demo_file = pvporcupinedemo.porcupine_demo_file:main
+porcupine_demo_mic = pvporcupinedemo.porcupine_demo_mic:main
+
