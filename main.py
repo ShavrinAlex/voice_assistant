@@ -1,6 +1,6 @@
-import app.assistent as assistent
+from App.VoiceAssistant import VoiceAssistant
+
 
 if __name__ == "__main__":
-    assistent = assistent.Voice_Assistent()
-    assistent.start()
-    pass
+    assistant = VoiceAssistant()
+    assistant.start()

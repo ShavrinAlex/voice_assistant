@@ -1,34 +1,34 @@
-from vosk import Model, KaldiRecognizer  # оффлайн-распознавание от Vosk
-import wave  # создание и чтение аудиофайлов формата wav
-import json  # работа с json-файлами и json-строками
-import speech_recognition # распознавание пользовательской речи (Speech-To-Text)
-import os  # работа с файловой системой
+from vosk import Model, KaldiRecognizer     # offline recognition from Vosk
+import wave                                 # creating and reading wav audio files
+import json                                 # working with json files and json strings
+import speech_recognition                   # user speech recognition (Speech-To-Text)
+import os                                   # working with the file system
 
 
-class Receive_Speech:
-    '''
+class SpeechReceiver:
+    """
     Принимает и обрабатывает речь пользователя. Возвращает в класс основной программы строку, сказанную пользователем
     Accepts and processes the user's speech. Returns to the class of the main program the string said by the user
-    '''
+    """
 
     def __init__(self):
-        pass
-    def record_and_recognize_audio(self,recognizer,microphone,*args: tuple):
-        '''
-        :param args:
-        :param recognizer: распознаватель, объект из библиотеки speech_recognition
-        :param microphone: микрофон, объект из библиотеки speech_recognition
+        self.__recognizer = speech_recognition.Recognizer()
+        self.__microphone = speech_recognition.Microphone()
+
+    def record_and_recognize_audio(self) -> str:
+        """
         :return: строка, сказанная пользователем
-        '''
-        with microphone:
+        """
+
+        with self.__microphone:
             recognized_data = ""
 
             # регулирование уровня окружающего шума
-            recognizer.adjust_for_ambient_noise(microphone, duration=2)
+            self.__recognizer.adjust_for_ambient_noise(self.__microphone, duration=2)
 
             try:
                 print("Listening...")
-                audio = recognizer.listen(microphone, 5, 5)
+                audio = self.__recognizer.listen(self.__microphone, 5, 5)
 
                 with open("microphone-results.wav", "wb") as file:
                     file.write(audio.get_wav_data())
@@ -40,7 +40,7 @@ class Receive_Speech:
             # использование online-распознавания через Google
             try:
                 print("Started recognition...")
-                recognized_data = recognizer.recognize_google(audio, language="ru").lower()
+                recognized_data = self.__recognizer.recognize_google(audio, language="ru").lower()
 
             except speech_recognition.UnknownValueError:
                 pass
@@ -53,7 +53,7 @@ class Receive_Speech:
 
             return recognized_data
 
-    def use_offline_recognition(self):
+    def use_offline_recognition(self) -> str:
         """
         Переключение на оффлайн-распознавание речи
         :return: распознанная фраза
