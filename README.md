@@ -1,13 +1,5 @@
 # voice_assistant
 
-## rules for developers:
-1) Работаем под своей веткой с именем <ФамилияИмя>
-2) Classe's and file's names are in *PascalCase*
-3) Имя файла и папки по возможности совпадает с именем класса
-4) Поля классов по возможности приватные <__поле_класса>
-5) Variable's and method's names are in *snake_case*
-6) Импорт библиотек от корневой <App...>
-7) Комментарии по возможности на Английском
-8) Изменение чужого кода только по согласованию
-9) venv и .idea не пушить
-10) Комментарии должны быть максимально подробные <ФамилияИмя: перечисление всех нововведений>
+rules:
+1) Classe's and file's names are in *PascalCase*
+2) Variable's and method's names are in *snake_case*
