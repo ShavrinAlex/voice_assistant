@@ -2,3 +2,6 @@ PyAudio==0.2.13
 vosk~=0.3.45
 pyttsx3~=2.90
 SpeechRecognition~=3.10.0
+
+pvporcupine~=2.2.1
+pvrecorder~=1.1.1

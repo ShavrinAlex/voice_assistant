@@ -1,6 +1,8 @@
 from App.Utils.Config import *
 from App.Utils.Enums import Sex, Languages
-import pyttsx3                              # for voice playback on Windows
+import pyttsx3                                          # for voice playback on Windows
+import os.path                                          # to get the path to the data file
+from App.PickleLoader.PickleLoader import PickleLoader  # to save the settings
 from random import randint
 
 
@@ -14,9 +16,13 @@ class SpeechReproducer:
     """
 
     def __init__(self, name=VA_NAME, sex=VA_SEX, language=VA_LANGUAGE):
-        self.__name = name
-        self.__sex = sex
-        self.__language = language
+        d = os.path.abspath(VA_DATA_FILE)
+        if os.path.exists(d):
+            self.__name, self.__sex, self.__language = PickleLoader.load(d)
+        else:
+            self.__name, self.__sex, self.__language = name, sex, language
+            data = [name, sex, language]
+            PickleLoader.dump(data, d)
 
         self.__voice_engine = self.set_voice()
 
@@ -99,3 +105,4 @@ class SpeechReproducer:
         self.reproduce_speech(farewells[randint(0, len(farewells) - 1)])
         self.__voice_engine.stop()
         quit()
+#s = SpeechReproducer()
