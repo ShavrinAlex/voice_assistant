@@ -1,6 +1,8 @@
 from App.SpeechReceiver.SpeechReceiver import SpeechReceiver
 from App.SpeechReproducer.SpeechReproduser import SpeechReproducer
+from App.CommandRecognizer.CommandRecognizer import CommandRecognizer
 from App.Utils.Config import VA_NAME
+from App.Utils.Enums import Command
 import os  # working with the file system
 
 
@@ -15,6 +17,7 @@ class VoiceAssistant:
     def __init__(self):
         self.__speech_reproduces = SpeechReproducer()
         self.__speech_receiver = SpeechReceiver()
+        self.__command_recognizer = CommandRecognizer()
 
         self.__speech_string = ""
         self.__wake_word = VA_NAME
@@ -35,8 +38,14 @@ class VoiceAssistant:
             if os.path.exists("microphone-results.wav"):
                 os.remove("microphone-results.wav")
             print(self.__speech_string)
-            if (self.__speech_string == 'пока'):
+
+            command = self.__command_recognizer.get_command(self.__speech_string)
+
+            # Перенести в CommandSwitcher
+            if (command == Command.farewell):
                 self.__speech_reproduces.reproduce_farewell_and_quit()
-
-
-
+                break
+            elif (command == Command.greeting):
+                self.__speech_reproduces.reproduce_greetings()
+            elif (command == Command.failure):
+                self.__speech_reproduces.reproduce_failure_phrase()
