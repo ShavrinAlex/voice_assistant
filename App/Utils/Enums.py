@@ -10,3 +10,11 @@ class Sex(Enum):
 class Languages(Enum):
     RU = 3
     EN = 4
+
+
+class Command(Enum):
+    failure = 0
+    greeting = 1
+    farewell = 2
+    google_search = 3
+    run_application = 4
