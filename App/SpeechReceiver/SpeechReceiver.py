@@ -7,9 +7,11 @@ import pvporcupine                          # wake word detection library
 from pvrecorder import PvRecorder           # record wake word detection
 from pathlib import Path                    # build path to file
 
+
 LAST_KEYWORDS_PATH = 'venv/Lib/site-packages/pvporcupine/resources/keyword_files/windows/wwd_ru.ppn'
-ACCESS_KEY = "ovnQ/QcjpAvIZin1XfxN0ZeWQOG3Iy3EdxF+J9SM0+jStZBzZ774Ow=="
+ACCESS_KEY = "1UuJKwXkKEHtVKZe8fwNET4gcDhPDuYfLKs8vRcVP8Z8bF1xZBnyUw=="
 LAST_MODEL_PATH = 'venv/Lib/site-packages/pvporcupine/lib/common/porcupine_params_ru.pv'
+
 
 class SpeechReceiver:
     """
@@ -92,12 +94,12 @@ class SpeechReceiver:
         return recognized_data
 
     def wake_word_detection(self):
-        '''
+        """
         используя модуль porcupine находит слово для активации голосового асистента
         :return: Флаг, уведомляющий о том, что wake word найдено.
-        '''
-        project_path = open(str(Path('App/SpeechReceiver/ProjectPath.txt')),'r')
-        work_dir = Path(project_path.read())
+        """
+
+        work_dir = Path('').resolve()   # получает путь до папки проекта
         access_key = ACCESS_KEY
         keywords_path = [str(work_dir/LAST_KEYWORDS_PATH)]
         model_path = str(work_dir/LAST_MODEL_PATH)
