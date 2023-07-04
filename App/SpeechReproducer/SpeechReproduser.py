@@ -8,21 +8,28 @@ from random import randint
 
 class SpeechReproducer:
     """
+    Класс воспроизводителя голосового помощника, который включает в себя следующие поля:
     Voice assistant reproducer class, which includes the following fields:
+
+    :field __name: строка - имя голосового помощника
+    :field __sex: строка - пол голосового помощника
+    :field __language: строка - язык, который распознает помощник, и речь
+    :field __voice_engine: строка - pyttsx3.Engine - голосовой движок
+
     :field __name: string - name of the voice assistant
     :field __sex: string - voice assistant's gender
     :field __language: string - the language that the assistant recognizes and speech
     :field __voice_engine: string - pyttsx3.Engine - voice engine
     """
 
-    def __init__(self, name=VA_NAME, sex=VA_SEX, language=VA_LANGUAGE):
-        d = os.path.abspath(VA_DATA_FILE)
-        if os.path.exists(d):
-            self.__name, self.__sex, self.__language = PickleLoader.load(d)
+    def __init__(self, name=VA_NAME, sex=VA_SEX, language=VA_LANGUAGE) -> None:
+        file_to_load = os.path.abspath(VA_DATA_FILE)
+        if os.path.exists(file_to_load):
+            self.__name, self.__sex, self.__language = PickleLoader.load(file_to_load)
         else:
             self.__name, self.__sex, self.__language = name, sex, language
             data = [name, sex, language]
-            PickleLoader.dump(data, d)
+            PickleLoader.dump(data,  file_to_load)
 
         self.__voice_engine = self.set_voice()
 
@@ -39,8 +46,12 @@ class SpeechReproducer:
 
     def set_voice(self) -> pyttsx3.Engine:
         """
+        Эта функция устанавливает голос помощника по умолчанию
+        (индекс может варьироваться в зависимости от настроек операционной системы)
         This function sets the assistant's voice by default
         (the index may vary depending on the operating system settings)
+
+        :return tts_engine: pyttsx 3.Engine - голосовой движок
         :return tts_engine: pyttsx3.Engine - voice engine
         """
 
@@ -58,11 +69,17 @@ class SpeechReproducer:
             self.__language, self.__sex = Languages.RU.value, Sex.Woman.value
             tts_engine.setProperty("voice", voices_configurations[(Languages.RU.value, Sex.Woman.value)])
 
+        tts_engine.setProperty('rate', 265)
+        tts_engine.setProperty('volume', 0.9)
+
         return tts_engine
 
     def reproduce_speech(self, text_to_speech: str) -> None:
         """
+        Эта функция воспроизводит речь в ответах голосового помощника (без сохранения звука)
         This function plays the speech of the voice assistant's responses (without saving audio)
+
+        :param text_to_speech: строка - текст, подлежащий преобразованию в речь
         :param text_to_speech: string - text to be converted to speech
         """
 
@@ -71,8 +88,10 @@ class SpeechReproducer:
 
     def reproduce_greetings(self):
         """
+        Эта функция воспроизводит случайную приветственную фразу
         This function plays a random welcome phrase
         """
+
         # нужно добавить перевод по необходимости и вывод данных о пользователе
         greetings = [
             "Привет, {}! Чем я могу помочь вам сегодня?",
@@ -82,6 +101,7 @@ class SpeechReproducer:
 
     def reproduce_failure_phrase(self) -> None:
         """
+        Эта функция воспроизводит случайную фразу при сбое распознавания
         This function plays a random phrase when recognition fails
         """
 
@@ -94,7 +114,8 @@ class SpeechReproducer:
 
     def reproduce_farewell_and_quit(self):
         """
-        This function plays the farewell speech
+        Эта функция воспроизводит прощальную речь и завершает работу ассистента
+        This function plays the farewell speech and completes the assistant's work
         """
 
         # нужно добавить перевод по необходимости и вывод данных о пользователе
@@ -105,4 +126,3 @@ class SpeechReproducer:
         self.reproduce_speech(farewells[randint(0, len(farewells) - 1)])
         self.__voice_engine.stop()
         quit()
-#s = SpeechReproducer()
