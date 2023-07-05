@@ -20,4 +20,9 @@ Rules:
 6. pip install SpeechRecognition
 7. pip install scikit-learn
 
-
+# Расширение функционала
+Чтобы добавить свой функционал не забудьте:
+1. В App.Utils.Enums.Command добавить соответствующую запись о своей команде;
+2. В App.CommandRecognizer.config.json добавить запись о вашей команде, её номер Enum.Command и ключевые фразы для обучения распознавания;
+3. Добавьте файлы вашей функции в отдельный каталог в App.AssistantFunctions;
+4. Добавьте ваш функционал в App.CommandSwitcher.Switcher, по примеру других функций.
