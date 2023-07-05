@@ -44,6 +44,7 @@ class SpeechReceiver:
 
         with self.__microphone:
             recognized_data = ""
+            
             try:
                 print("Listening...")
                 audio = self.__recognizer.listen(self.__microphone, 5, 5)
