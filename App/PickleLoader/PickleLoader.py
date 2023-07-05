@@ -3,6 +3,7 @@ import pickle
 
 class PickleLoader:
     """
+    Класс Pickle загрузчика для сохранения данных приложения в двоичном виде и восстановления их обратно
     The Pickle class of the loader, for saving application data in binary form and restoring them back
     """
 

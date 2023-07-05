@@ -15,25 +15,36 @@ LAST_MODEL_PATH = 'venv/Lib/site-packages/pvporcupine/lib/common/porcupine_param
 
 class SpeechReceiver:
     """
-    Принимает и обрабатывает речь пользователя. Возвращает в класс основной программы строку, сказанную пользователем
-    Accepts and processes the user's speech. Returns to the class of the main program the string said by the user
+    Класс получатель речи. Принимает и обрабатывает речь пользователя. Он имеет следующие поля:
+    The speech recipient class. Accepts and processes the user's speech. It has the following fields:
+
+    :field __recognizer: speech_recognition.Recognizer - обьект распознавателя из библиотеки speech_recognition
+    :field __microphone: speech_recognition.Microphone - обьект микрофона из библиотеки speech_recognition
+
+    :field __recognizer: speech_recognition.Recognizer - the recognizer object from the speech_recognition library
+    :field __microphone: speech_recognition.Microphone - microphone object from the speech_recognition library
     """
 
     def __init__(self):
         self.__recognizer = speech_recognition.Recognizer()
         self.__microphone = speech_recognition.Microphone()
 
+        with self.__microphone:
+            # регулирование уровня окружающего шума
+            self.__recognizer.adjust_for_ambient_noise(self.__microphone, duration=2)
+
     def record_and_recognize_audio(self) -> str:
         """
+        Этот метод записывает команду пользователя и переводит ее в текст, используя сеть
+        This method records the user's command and translates it into text using the network
+
         :return: строка, сказанная пользователем
+        :return: a string said by the user
         """
 
         with self.__microphone:
             recognized_data = ""
-
-            # регулирование уровня окружающего шума
-            # self.__recognizer.adjust_for_ambient_noise(self.__microphone, duration=2)
-
+            
             try:
                 print("Listening...")
                 audio = self.__recognizer.listen(self.__microphone, 5, 5)
@@ -63,9 +74,13 @@ class SpeechReceiver:
 
     def use_offline_recognition(self) -> str:
         """
-        Переключение на оффлайн-распознавание речи
-        :return: распознанная фраза
+        Этот метод переводит команду пользователя в текст, не используя сеть
+        This method translates the user's command into text without using the network
+
+        :return: строка - распознанная фраза
+        :return: string - recognized phrase
         """
+
         recognized_data = ""
         try:
             # проверка наличия модели на нужном языке в каталоге приложения
@@ -95,8 +110,11 @@ class SpeechReceiver:
 
     def wake_word_detection(self):
         """
-        используя модуль porcupine находит слово для активации голосового асистента
+        Этот метод, используя модуль porcupine находит слово для активации голосового ассистента
+        This method, using the porcupine module, finds the word to activate the voice assistant
+
         :return: Флаг, уведомляющий о том, что wake word найдено.
+        :return: Flag notifying that wake word has been found.
         """
 
         work_dir = Path('').resolve()   # получает путь до папки проекта
@@ -107,9 +125,9 @@ class SpeechReceiver:
                                        model_path=model_path)
         recoder = PvRecorder(device_index=-1, frame_length=porcupine.frame_length)
 
+        print("wwd started")
         try:
             recoder.start()
-
             while True:
                 keyword_index = porcupine.process(recoder.read())
                 if keyword_index >= 0:

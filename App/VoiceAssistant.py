@@ -12,10 +12,22 @@ import os  # working with the file system
 
 class VoiceAssistant:
     """
-    Класс-фасад. Вызывается из main, реализует главный цикл программы.
-    Хранит, принимает и отдает информацию.
-    Class-facade. Called from main, implements the main program loop.
-    Stores, accepts and gives information.
+    Класс голосового ассистента - фасад. Вызывается из main, реализует главный цикл программы.
+    Хранит, принимает и отдает информацию. Он имеет следующие поля:
+    Voice assistant class - facade. Called from main, implements the main loop of the program.
+    Stores, accepts and gives information. It has the following fields:
+
+    :field __speech_reproduces: SpeechReproducer - объект для воспроизведения ответов помощника
+    :field __speech_receiver: SpeechReceiver - объект распознавания голоса в текст
+    :field __command_recognizer: CommandRecognizer - объект распознавателя команд в пользовательском тексте
+    :field __speech_string: string - прочитанная пользователем фраза
+    :field __wake_word: string - пробуждающее слово-фраза
+
+    :field __speech_reproduces: SpeechReproducer - object for reproducing the assistant's responses
+    :field __speech_receiver: SpeechReceiver - voice recognition object to text
+    :field __command_recognizer: CommandRecognizer - the command recognizer object in the user's text
+    :field __speech_string: string - the user's read phrase
+    :field __wake_word: string - wake word phrase
     """
 
     def __init__(self):
@@ -26,14 +38,16 @@ class VoiceAssistant:
         self.__speech_string = ""
         self.__wake_word = VA_NAME
 
-    def start(self):
+    def start(self) -> None:
         """
         Основной уикл работы программы. Запускает остальные модули и принимает от них данные.
         The main loop of the program. Launches the other modules and receives data from them.
-        :return:
         """
+
+        print("program started")
         self.__speech_receiver.wake_word_detection()
         self.__speech_reproduces.reproduce_greetings()
+
         while True:
             # старт записи речи с последующим выводом распознанной речи
             # и удалением записанного в микрофон аудио

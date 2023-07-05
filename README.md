@@ -10,3 +10,14 @@ Rules:
 7) Комментарии по возможности на Английском
 8) Изменение чужого кода только по согласованию
 9) Комментарии должны быть максимально подробные <ФамилияИмя: перечисление всех нововведений>
+
+# для запуска:
+1. pip install pvporcupine
+2. pip install pvrecorder
+3. pip install PyAudio
+4. pip install vosk
+5. pip install pyttsx3
+6. pip install SpeechRecognition
+7. pip install scikit-learn
+
+
