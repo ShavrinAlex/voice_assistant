@@ -32,7 +32,7 @@ class SpeechReceiver:
             recognized_data = ""
 
             # регулирование уровня окружающего шума
-            self.__recognizer.adjust_for_ambient_noise(self.__microphone, duration=2)
+            # self.__recognizer.adjust_for_ambient_noise(self.__microphone, duration=2)
 
             try:
                 print("Listening...")

@@ -1,0 +1,93 @@
+{
+    "date": {
+        "Monday": {
+            "examples": ["понедельник", "понедельнику"],
+            "responses": 20
+        },
+        "Tuesday": {
+            "examples": ["вторник", "вторничек"],
+            "responses": 21
+        },
+        "Wednesday": {
+            "examples": ["среда", "среду"],
+            "responses": 22
+        },
+        "Thursday": {
+            "examples": ["четверг", "четверга"],
+            "responses": 23
+        },
+        "Friday": {
+            "examples": ["пятница", "пятницу"],
+            "responses": 24
+        },
+        "Saturday": {
+            "examples": ["суббота", "субботу"],
+            "responses": 25
+        },
+        "Sunday": {
+            "examples": ["воскресенье", "воскресенью"],
+            "responses": 26
+        },
+        "January": {
+            "examples": ["январь", "январе", "января"],
+            "responses": 1
+        },
+        "February": {
+            "examples": ["февраль", "феврале", "февраля"],
+            "responses": 2
+        },
+        "March": {
+            "examples": ["март", "марте", "марта"],
+            "responses": 3
+        },
+        "April": {
+            "examples": ["апрель", "апреле", "апреля"],
+            "responses": 4
+        },
+        "May": {
+            "examples": ["май", "мае", "мая"],
+            "responses": 5
+        },
+        "June": {
+            "examples": ["июнь", "июня"],
+            "responses": 6
+        },
+        "July": {
+            "examples": ["июль", "июля"],
+            "responses": 7
+        },
+        "August": {
+            "examples": ["август", "августа"],
+            "responses": 8
+        },
+        "September": {
+            "examples": ["сентябрь", "сентября"],
+            "responses": 9
+        },
+        "October": {
+            "examples": ["октябрь", "октября"],
+            "responses": 10
+        },
+        "November": {
+            "examples": ["ноябрь", "ноября"],
+            "responses": 11
+        },
+        "December": {
+            "examples": ["декабрь", "декабря"],
+            "responses": 12
+        },
+        "Today": {
+            "examples": ["сегодня"],
+            "responses": 13
+        },
+        "Tomorrow": {
+            "examples": ["завтра"],
+            "responses": 14
+        },
+        "AfterTomorrow": {
+            "examples": ["послезавтра"],
+            "responses": 15
+        }
+    },
+    "failure_phrases": 0
+}
