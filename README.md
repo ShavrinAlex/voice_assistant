@@ -19,6 +19,7 @@ Rules:
 5. pip install pyttsx3
 6. pip install SpeechRecognition
 7. pip install scikit-learn
+8. pip install translate
 
 # Расширение функционала
 Чтобы добавить свой функционал не забудьте:
