@@ -7,8 +7,11 @@ class GoogleSearch:
         self.__mediator = mediator
 
     def search(self):
-        url = "https://www.google.com/search?q=" + self.__mediator.get_request()
+        self.__mediator.reproduce_speech("прошу, введите ваш запрос")
+        request = self.__mediator.get_request()
+        url = "https://www.google.com/search?q=" + request
         webbrowser.open(url)
+        self.__mediator.reproduce_speech("вот что мне удалось найти по запросу: " + request)
 
   
 

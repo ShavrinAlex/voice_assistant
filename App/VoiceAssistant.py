@@ -1,13 +1,17 @@
 from App.SpeechReceiver.SpeechReceiver import SpeechReceiver
 from App.SpeechReproducer.SpeechReproduser import SpeechReproducer
-from App.CommandRecognizer.CommandRecognizer import CommandRecognizer
+from App.Recognizer.CommandRecognizer import CommandRecognizer
 from App.Utils.Config import VA_NAME
-from App.Utils.Enums import Command
+from App.Utils.Enums import Commands
 import os  # working with the file system
+
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from App.Switcher.CommandSwitcher import Switcher
+
+COMMANDS_FILE = 'App/Recognizer/config.json'
+INDEX_OF_PROBABILITY = 0.5
 
 
 class VoiceAssistant:
@@ -19,13 +23,13 @@ class VoiceAssistant:
 
     :field __speech_reproduces: SpeechReproducer - объект для воспроизведения ответов помощника
     :field __speech_receiver: SpeechReceiver - объект распознавания голоса в текст
-    :field __command_recognizer: CommandRecognizer - объект распознавателя команд в пользовательском тексте
+    :field __command_recognizer: Recognizer - объект распознавателя команд в пользовательском тексте
     :field __speech_string: string - прочитанная пользователем фраза
     :field __wake_word: string - пробуждающее слово-фраза
 
     :field __speech_reproduces: SpeechReproducer - object for reproducing the assistant's responses
     :field __speech_receiver: SpeechReceiver - voice recognition object to text
-    :field __command_recognizer: CommandRecognizer - the command recognizer object in the user's text
+    :field __command_recognizer: Recognizer - the command recognizer object in the user's text
     :field __speech_string: string - the user's read phrase
     :field __wake_word: string - wake word phrase
     """
@@ -33,11 +37,12 @@ class VoiceAssistant:
     def __init__(self):
         self.__speech_reproduces = SpeechReproducer()
         self.__speech_receiver = SpeechReceiver()
-        self.__command_recognizer = CommandRecognizer()
+        self.__command_recognizer = CommandRecognizer(Commands, COMMANDS_FILE, INDEX_OF_PROBABILITY)
 
         self.__speech_string = ""
         self.__wake_word = VA_NAME
         self.__command_switcher = Switcher(self)
+        self.__running = False
 
     def start(self) -> None:
         """
@@ -45,31 +50,20 @@ class VoiceAssistant:
         The main loop of the program. Launches the other modules and receives data from them.
         """
 
+        self.__running = True
         print("program started")
         self.__speech_receiver.wake_word_detection()
         self.__speech_reproduces.reproduce_greetings()
 
-        while True:
+        while self.__running:
             # старт записи речи с последующим выводом распознанной речи
             # и удалением записанного в микрофон аудио
             self.__speech_string = self.get_request()
 
             command = self.__command_recognizer.get_command(self.__speech_string)
-
-            # Перенести в CommandSwitcher
-            if (command == Command.farewell):
-                self.__speech_reproduces.reproduce_farewell_and_quit()
-                break
-            elif (command == Command.greeting):
-                self.__speech_reproduces.reproduce_greetings()
-            # elif (command == Command.failure):
-            #     self.__speech_reproduces.reproduce_failure_phrase()
-            elif (self.__speech_string == "напомни"):
-                from App.AssistantFunctions.Reminder.Reminder import Reminder
-                rem = Reminder(self)
-                rem.create_promt()
+            self.__command_switcher.switch(command, self.__speech_string)
     
-    def get_request(self):
+    def get_request(self) -> str:
         # старт записи речи с последующим выводом распознанной речи
         # и удалением записанного в микрофон аудио
         self.__speech_reproduces.reproduce_speech('Слушаю')
@@ -80,5 +74,14 @@ class VoiceAssistant:
         print(speech_string)
         return speech_string
     
-    def reproduce_speech(self, string_to_reproduce: str):
+    def reproduce_speech(self, string_to_reproduce: str) -> None:
         self.__speech_reproduces.reproduce_speech(string_to_reproduce)
+    
+    def stop_app(self) -> None:
+        self.__running = False
+    
+    def reproduce_greetings(self) -> None:
+        self.__speech_reproduces.reproduce_greetings()
+
+    def reproduce_farewell_and_quit(self) -> None:
+        self.__speech_reproduces.reproduce_farewell_and_quit()
