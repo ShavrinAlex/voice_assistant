@@ -3,15 +3,16 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import LinearSVC
 
-from App.Utils.Enums import Command
 import json
+from App.Utils.Enums import Commands
+
 
 # при добавлении новых команд стоит уменьшать этот показатель
-INDEX_OF_PROBABILITY = 0.5
-COMMANDS_FILE = 'App/CommandRecognizer/config.json'
+#INDEX_OF_PROBABILITY = 0.5
+#COMMANDS_FILE = 'App/Recognizer/Commands.json'
 
 
-class CommandRecognizer:
+class Recognizer:
     """
     Класс распознавателя команд в тексте пользовательского запроса, который включает в себя следующие поля:
     The command recognizer class in the user request text, which includes the following fields:
@@ -21,7 +22,10 @@ class CommandRecognizer:
     :field self.__classifier:
     """
 
-    def __init__(self) -> None:
+    def __init__(self, commands, commands_file: str, index_of_probability: float) -> None:
+        self.__commands = commands
+        self.__commands_file = commands_file
+        self.__index_of_probability = index_of_probability
         self.__vectorizer = TfidfVectorizer(analyzer="char", ngram_range=(2, 3))
         self.__classifier_probability = LogisticRegression()
         self.__classifier = LinearSVC()
@@ -33,7 +37,7 @@ class CommandRecognizer:
         This method prepares the model for guessing the user's command.
         """
         
-        with open(COMMANDS_FILE, encoding="UTF8") as file:
+        with open(self.__commands_file, encoding="UTF8") as file:
             config = json.load(file)
 
         corpus = []
@@ -70,11 +74,10 @@ class CommandRecognizer:
 
         best_intent_probability = probabilities[index_of_best_intent]
 
-        if best_intent_probability > INDEX_OF_PROBABILITY:
+        if best_intent_probability > self.__index_of_probability:
             return user_request, best_intent_probability, best_intent
-    
-    @staticmethod
-    def get_best_intent_in_list(intent_list: list) -> Command:
+
+    def get_best_intent_in_list(self, intent_list: list):
         """
         Получение наиболее подходящей команды из списка соответствий.
         This method gets the most appropriate command from the list of matches.
@@ -87,8 +90,8 @@ class CommandRecognizer:
 
         if intent_list:
             intent_list.sort(key=lambda intent: intent[1])
-            return Command[intent_list[-1][2]]
-        return Command["failure"]
+            return self.__commands[intent_list[-1][2]]
+        return self.__commands["failure"]
     
     @staticmethod
     def format_print_intent_list(intent_list: list) -> None:
@@ -106,36 +109,3 @@ class CommandRecognizer:
                 print('<-\t {:65} | {:20} | {}'.format(request[0], request[1], request[2]), '\n')
         else:
             print('<-\t No recognized intents')
-
-    def get_command(self, user_input: str) -> Command:
-        """
-        Поиск наилучшего соответствия.
-        This method searches for the best match
-
-        :params user_input: строка - пользовательский ввод, который необходимо 
-            преобразовать к команде.
-        :params user_input: string - user input that needs
-            convert to command.
-
-        :return: Command - the element of listing all commands
-        """
-
-        if user_input:
-            text_parts = user_input.split()
-            intent_list = []
-
-            for lenght in range(len(text_parts)):
-                for first_word in range(len(text_parts) - lenght):
-                    final_word = first_word + lenght + 1
-
-                    request = self.get_intent((" ".join(text_parts[first_word:final_word])).strip())
-                    if request:
-                        intent_list.append(request)
-
-            intent_list.sort(key=lambda intent: intent[1])
-            # self.format_print_intent_list(intent_list)
-
-            best_intent = self.get_best_intent_in_list(intent_list)
-            return best_intent
-        else:
-            return Command.failure

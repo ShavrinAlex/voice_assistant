@@ -12,9 +12,25 @@ class Languages(Enum):
     EN = 4
 
 
-class Command(Enum):
+class Commands(Enum):
     failure = 0
     greeting = 1
     farewell = 2
     google_search = 3
     run_application = 4
+
+
+class VolumeCommands(Enum):
+    failure = 0
+    mute = 1
+    unmute = 2
+    set_value = 3
+    up = 4
+    down = 5
+
+
+class ScreenBrightnessCommands(Enum):
+    failure = 0
+    set_value = 1
+    up = 2
+    down = 3

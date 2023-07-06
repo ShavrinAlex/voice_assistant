@@ -1,6 +1,8 @@
 from AppOpener import open, close
 import translate
 import string
+
+
 class OpenApp:
     """
     class that implements open applications on a computer
@@ -12,11 +14,13 @@ class OpenApp:
         self.__nonrequest_words = ["a", "the", "open", "find", "on", "computer", "please", "good", "evening", "morning", "afternoon", "night",
                                  "my","me","i","you","your","close","can","hi","hello","how","bad","are","am","is","for","would","want",
                                  "like","to","in","at","on","game","program","application"]
+
     def __command_transform(self):
         """
         Converting a user command string to an application name string
         :return:
         """
+
         translator = translate.Translator("en","ru")
         input_string_words = translator.translate(self.__input_string).lower()
         input_string_words = input_string_words.translate(str.maketrans('', '', string.punctuation))
@@ -37,6 +41,7 @@ class OpenApp:
         Using the AppOpener library to open/close an application
         :return:
         """
+
         try:
             if self.__command == "open":
                 open(self.__app,match_closest=True,throw_error=True)
@@ -57,6 +62,7 @@ class OpenApp:
         Method called to work with the class
         :return:
         """
+
         try:
             self.__command_transform()
             print(self.__command)
