@@ -18,6 +18,8 @@ class Commands(Enum):
     farewell = 2
     google_search = 3
     run_application = 4
+    volume_settings = 5
+    screen_brightness_settings = 6
 
 
 class VolumeCommands(Enum):

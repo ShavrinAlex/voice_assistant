@@ -10,7 +10,7 @@ import os  # working with the file system
 # if TYPE_CHECKING:
     # from App.AssistantFunctions.Reminder import Reminder
 COMMANDS_FILE = 'App/Recognizer/config.json'
-INDEX_OF_PROBABILITY = 0.5
+INDEX_OF_PROBABILITY = 0.2
 
 
 class VoiceAssistant:
@@ -70,6 +70,19 @@ class VoiceAssistant:
                 from App.AssistantFunctions.Reminder import Reminder
                 rem = Reminder(self)
                 rem.create_promt()
+            elif (command == Commands.run_application):
+                from App.AppOpener.OpenApp import OpenApp
+                oa = OpenApp(self.__speech_string)
+                oa.open_app()
+            elif (command == Commands.volume_settings):
+                from App.SoundController.SoundController import SoundController
+                sc = SoundController()
+                sc.execute(self.__speech_string)
+            elif (command == Commands.screen_brightness_settings):
+                from App.ScreenBrightnessController.ScreenBrightnessController import ScreenBrightnessController
+                sbc = ScreenBrightnessController()
+                sbc.execute(self.__speech_string)
+
     
     def get_request(self):
         # старт записи речи с последующим выводом распознанной речи

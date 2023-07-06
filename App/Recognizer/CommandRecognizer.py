@@ -2,6 +2,9 @@ from App.Recognizer.Recognizer import Recognizer
 
 
 class CommandRecognizer(Recognizer):
+    def __init__(self, commands, commands_file: str, index_of_probability: float) -> None:
+        super().__init__(commands, commands_file, index_of_probability)
+
     def get_command(self, user_input: str):
         """
         Поиск наилучшего соответствия.
@@ -28,7 +31,7 @@ class CommandRecognizer(Recognizer):
                         intent_list.append(request)
 
             intent_list.sort(key=lambda intent: intent[1])
-            # self.format_print_intent_list(intent_list)
+            self.format_print_intent_list(intent_list)
 
             best_intent = self.get_best_intent_in_list(intent_list)
             return best_intent
