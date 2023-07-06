@@ -5,9 +5,9 @@ from App.Utils.Config import VA_NAME
 from App.Utils.Enums import Command
 import os  # working with the file system
 
-# from typing import TYPE_CHECKING
-# if TYPE_CHECKING:
-    # from App.AssistantFunctions.Reminder import Reminder
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from App.Switcher.CommandSwitcher import Switcher
 
 
 class VoiceAssistant:
@@ -37,6 +37,7 @@ class VoiceAssistant:
 
         self.__speech_string = ""
         self.__wake_word = VA_NAME
+        self.__command_switcher = Switcher(self)
 
     def start(self) -> None:
         """
@@ -64,7 +65,7 @@ class VoiceAssistant:
             # elif (command == Command.failure):
             #     self.__speech_reproduces.reproduce_failure_phrase()
             elif (self.__speech_string == "напомни"):
-                from App.AssistantFunctions.Reminder import Reminder
+                from App.AssistantFunctions.Reminder.Reminder import Reminder
                 rem = Reminder(self)
                 rem.create_promt()
     
