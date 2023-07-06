@@ -10,7 +10,7 @@ import json
 
 # при добавлении новых команд стоит уменьшать этот показатель
 INDEX_OF_PROBABILITY = 0
-DATA_FILE = "App/AssistantFunctions/config.json"
+DATA_FILE = "App/AssistantFunctions/Commands.json"
 EVENT_STORAGE = "App/AssistantFunctions/storage.pkl"
 
 class Reminder:

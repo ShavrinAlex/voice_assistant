@@ -1,13 +1,16 @@
 from App.SpeechReceiver.SpeechReceiver import SpeechReceiver
 from App.SpeechReproducer.SpeechReproduser import SpeechReproducer
-from App.CommandRecognizer.CommandRecognizer import CommandRecognizer
+from App.Recognizer.CommandRecognizer import CommandRecognizer
 from App.Utils.Config import VA_NAME
-from App.Utils.Enums import Command
+from App.Utils.Enums import Commands
 import os  # working with the file system
+
 
 # from typing import TYPE_CHECKING
 # if TYPE_CHECKING:
     # from App.AssistantFunctions.Reminder import Reminder
+COMMANDS_FILE = 'App/Recognizer/config.json'
+INDEX_OF_PROBABILITY = 0.5
 
 
 class VoiceAssistant:
@@ -19,13 +22,13 @@ class VoiceAssistant:
 
     :field __speech_reproduces: SpeechReproducer - объект для воспроизведения ответов помощника
     :field __speech_receiver: SpeechReceiver - объект распознавания голоса в текст
-    :field __command_recognizer: CommandRecognizer - объект распознавателя команд в пользовательском тексте
+    :field __command_recognizer: Recognizer - объект распознавателя команд в пользовательском тексте
     :field __speech_string: string - прочитанная пользователем фраза
     :field __wake_word: string - пробуждающее слово-фраза
 
     :field __speech_reproduces: SpeechReproducer - object for reproducing the assistant's responses
     :field __speech_receiver: SpeechReceiver - voice recognition object to text
-    :field __command_recognizer: CommandRecognizer - the command recognizer object in the user's text
+    :field __command_recognizer: Recognizer - the command recognizer object in the user's text
     :field __speech_string: string - the user's read phrase
     :field __wake_word: string - wake word phrase
     """
@@ -33,7 +36,7 @@ class VoiceAssistant:
     def __init__(self):
         self.__speech_reproduces = SpeechReproducer()
         self.__speech_receiver = SpeechReceiver()
-        self.__command_recognizer = CommandRecognizer()
+        self.__command_recognizer = CommandRecognizer(Commands, COMMANDS_FILE, INDEX_OF_PROBABILITY)
 
         self.__speech_string = ""
         self.__wake_word = VA_NAME
@@ -56,10 +59,10 @@ class VoiceAssistant:
             command = self.__command_recognizer.get_command(self.__speech_string)
 
             # Перенести в CommandSwitcher
-            if (command == Command.farewell):
+            if (command == Commands.farewell):
                 self.__speech_reproduces.reproduce_farewell_and_quit()
                 break
-            elif (command == Command.greeting):
+            elif (command == Commands.greeting):
                 self.__speech_reproduces.reproduce_greetings()
             # elif (command == Command.failure):
             #     self.__speech_reproduces.reproduce_failure_phrase()
