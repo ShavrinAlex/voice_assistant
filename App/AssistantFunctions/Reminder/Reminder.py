@@ -1,4 +1,5 @@
 # машинное обучения для реализации возможности распознавания даты
+# machine learning to implement date recognition capability
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import LinearSVC
@@ -8,10 +9,12 @@ from datetime import datetime, timedelta
 import pickle
 import json
 
+
 # при добавлении новых команд стоит уменьшать этот показатель
 INDEX_OF_PROBABILITY = 0
 DATA_FILE = "App/AssistantFunctions/Reminder/config.json"
 EVENT_STORAGE = "App/AssistantFunctions/Reminder/storage.pkl"
+
 
 class Reminder:
     def __init__(self, mediator: VoiceAssistant):

@@ -5,22 +5,25 @@ import string
 
 class OpenApp:
     """
-    class that implements open applications on a computer
+    Класс, реализующий открытые приложения на компьютере
+    Class that implements open applications on a computer
     """
-    def __init__(self):
+
+    def __init__(self) -> None:
         self.__app = ""
         self.__command = ""
-        self.__nonrequest_words = ["a", "the", "open", "find", "on", "computer", "please", "good", "evening", "morning", "afternoon", "night",
-                                 "my","me","i","you","your","close","can","hi","hello","how","bad","are","am","is","for","would","want",
-                                 "like","to","in","at","on","game","program","application"]
+        self.__nonrequest_words = ["a", "the", "open", "find", "on", "computer", "please", "good", "evening", "morning",
+                                   "afternoon", "night", "my", "me", "i", "you", "your", "close", "can", "hi", "hello",
+                                   "how", "bad", "are", "am", "is", "for", "would", "want", "like" ,"to", "in", "at",
+                                   "on", "game", "program", "application"]
 
-    def __command_transform(self, input_string: str):
+    def __command_transform(self, input_string: str) -> None:
         """
-        Converting a user command string to an application name string
-        :return:
+        Этот метод осуществляет преобразование пользовательской командной строки в строку имени приложения
+        This method of converting a custom command line to an application name string
         """
 
-        translator = translate.Translator("en","ru")
+        translator = translate.Translator("en", "ru")
         input_string_words = translator.translate(input_string).lower()
         input_string_words = input_string_words.translate(str.maketrans('', '', string.punctuation))
         input_string_words = input_string_words.split()
@@ -30,15 +33,15 @@ class OpenApp:
                 self.__command = word
             if word not in self.__nonrequest_words:
                 request_words.append(word)
-        if len(request_words)==0:
+        if len(request_words) == 0:
             # Exception Unknown command
             pass
         self.__app = ' '.join(request_words)
 
-    def __find_app(self):
+    def __find_app(self) -> None:
         """
-        Using the AppOpener library to open/close an application
-        :return:
+        Этот метод осуществляет использование библиотеки AppOpener для открытия/закрытия приложения
+        This method uses the AppOpener library to open/close the application
         """
 
         try:
@@ -56,10 +59,10 @@ class OpenApp:
             pass
         pass
 
-    def open_app(self, input_string: str):
+    def open_app(self, input_string: str) -> None:
         """
+        Метод, вызываемый для работы с классом
         Method called to work with the class
-        :return:
         """
 
         try:

@@ -5,7 +5,7 @@ from App.Utils.Enums import Sex, Languages
 VA_NAME = 'Lola'
 VA_SEX = Sex.Woman.value
 VA_LANGUAGE = Languages.RU.value
-VA_DATA_FILE = 'data.pkl'
+VA_DATA_FILE = 'App/SpeechReproducer/data.pkl'
 
 
 # Voice Assistant Receiver Configuration
