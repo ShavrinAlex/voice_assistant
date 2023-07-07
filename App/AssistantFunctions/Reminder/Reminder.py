@@ -166,21 +166,3 @@ class Reminder:
             pickle.dump(event_storage, write_file)
         
         self.__mediator.reproduce_speech("напоминание " + event_description + " на " + event_date.strftime("%d %B %Y, %A"))
-
-    def check_events(self):
-        events_to_delete = []
-        with open(EVENT_STORAGE, 'rb') as read_file:
-            try:
-                event_storage = pickle.load(read_file)
-                if not event_storage:
-                    event_storage = dict()
-                for key in event_storage.keys():
-                    if event_storage[key]["remind_from"] <= datetime.today():
-                        self.notify(key, event_storage[key])
-                    elif event_storage[key]["remind_until"] <= datetime.today():
-                        events_to_delete.append(key)
-            except:
-                pass
-    
-    def notify(self, promt_text: str, promt_data: datetime):
-        print("NOTIFY:", promt_text, promt_data["remind_until"], "days:", promt_data["remind_range"])

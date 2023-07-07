@@ -51,12 +51,12 @@ class VoiceAssistant:
 
         from App.CommandsSwitcher.CommandSwitcher import CommandsSwitcher
         self.__command_switcher = CommandsSwitcher(self)
+        self.__reminder_checker.check_events()
 
         self.__running = True
         print("program started")
         self.__speech_receiver.wake_word_detection()
         self.__speech_reproduces.reproduce_greetings()
-        self.__reminder_checker.check_events()
 
         while self.__running:
             now = datetime.datetime.now()
