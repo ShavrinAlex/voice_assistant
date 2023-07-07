@@ -11,7 +11,7 @@ if TYPE_CHECKING:
     from App.Switcher.CommandSwitcher import Switcher
 
 COMMANDS_FILE = 'App/Recognizer/config.json'
-INDEX_OF_PROBABILITY = 0.5
+INDEX_OF_PROBABILITY = 0.2
 
 
 class VoiceAssistant:
