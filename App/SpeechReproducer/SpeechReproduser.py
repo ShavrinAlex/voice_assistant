@@ -3,7 +3,7 @@ from App.Utils.Enums import Sex, Languages
 import pyttsx3                                          # for voice playback on Windows
 import os.path                                          # to get the path to the data file
 from App.PickleLoader.PickleLoader import PickleLoader  # to save the settings
-from random import randint
+from time import time
 
 
 class SpeechReproducer:
@@ -92,12 +92,11 @@ class SpeechReproducer:
         This function plays a random welcome phrase
         """
 
-        # нужно добавить перевод по необходимости и вывод данных о пользователе
         greetings = [
-            "Привет, {}! Чем я могу помочь вам сегодня?",
-            "Доброго вам дня {}! Чем я могу помочь вам сегодня?"
+            "Привет! Чем я могу помочь вам сегодня?",
+            "Доброго вам дня! Чем я могу помочь вам сегодня?"
         ]
-        self.reproduce_speech(greetings[randint(0, len(greetings) - 1)])
+        self.reproduce_speech(greetings[int(time() % len(greetings))])
 
     def reproduce_failure_phrase(self) -> None:
         """
@@ -105,12 +104,11 @@ class SpeechReproducer:
         This function plays a random phrase when recognition fails
         """
 
-        # нужно добавить перевод по необходимости
         failure_phrases = [
-            'Не могли бы вы повторить, пожалуйста?',
-            'Повтори, что ты сказал?'
+            'Извини, я не поняла, что ты сказал',
+            'К сожалению, мне не удалось распознать комманду'
         ]
-        self.reproduce_speech(failure_phrases[randint(0, len(failure_phrases) - 1)])
+        self.reproduce_speech(failure_phrases[int(time() % len(failure_phrases))])
 
     def reproduce_farewell_and_quit(self) -> None:
         """
@@ -120,8 +118,8 @@ class SpeechReproducer:
 
         # нужно добавить перевод по необходимости и вывод данных о пользователе
         farewells = [
-            "Прощай, {}! Хорошего дня!",
-            "Скоро увидимся, {}!"
+            "Прощай! Хорошего дня!",
+            "Скоро увидимся!"
         ]
-        self.reproduce_speech(farewells[randint(0, len(farewells) - 1)])
+        self.reproduce_speech(farewells[int(time() % len(farewells))])
         self.__voice_engine.stop()

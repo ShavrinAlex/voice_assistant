@@ -49,3 +49,5 @@ class CommandsSwitcher:
             self.__sound_controller.execute(command_text)
         elif command == GeneralCommands.screen_brightness_settings:
             self.__brightness_controller.execute(command_text)
+        elif command == GeneralCommands.failure:
+            self.__mediator.reproduce_failure_phrase()
