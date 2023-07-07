@@ -86,7 +86,7 @@ class SpeechReproducer:
         self.__voice_engine.say(text_to_speech)
         self.__voice_engine.runAndWait()
 
-    def reproduce_greetings(self):
+    def reproduce_greetings(self) -> None:
         """
         Эта функция воспроизводит случайную приветственную фразу
         This function plays a random welcome phrase
@@ -112,7 +112,7 @@ class SpeechReproducer:
         ]
         self.reproduce_speech(failure_phrases[randint(0, len(failure_phrases) - 1)])
 
-    def reproduce_farewell_and_quit(self):
+    def reproduce_farewell_and_quit(self) -> None:
         """
         Эта функция воспроизводит прощальную речь и завершает работу ассистента
         This function plays the farewell speech and completes the assistant's work
@@ -125,4 +125,3 @@ class SpeechReproducer:
         ]
         self.reproduce_speech(farewells[randint(0, len(farewells) - 1)])
         self.__voice_engine.stop()
-        quit()

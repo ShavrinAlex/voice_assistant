@@ -1,7 +1,9 @@
 from datetime import datetime, timedelta
 import pickle
 
+
 EVENT_STORAGE = "App/AssistantFunctions/Reminder/storage.pkl"
+
 
 class ReminderChecker:
     def check_events(self):

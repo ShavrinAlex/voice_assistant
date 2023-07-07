@@ -2,14 +2,11 @@ from App.SpeechReceiver.SpeechReceiver import SpeechReceiver
 from App.SpeechReproducer.SpeechReproduser import SpeechReproducer
 from App.Recognizer.CommandRecognizer import CommandRecognizer
 from App.Utils.Config import VA_NAME
-from App.Utils.Enums import Commands
+from App.Utils.Enums import GeneralCommands
 import os  # working with the file system
 import datetime
-
-
-# from typing import TYPE_CHECKING
-# if TYPE_CHECKING:
 from App.AssistantFunctions.Reminder.ReminderChecker import ReminderChecker
+
 
 COMMANDS_FILE = 'App/Recognizer/config.json'
 INDEX_OF_PROBABILITY = 0.2
@@ -35,15 +32,16 @@ class VoiceAssistant:
     :field __wake_word: string - wake word phrase
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.__speech_reproduces = SpeechReproducer()
         self.__speech_receiver = SpeechReceiver()
-        self.__command_recognizer = CommandRecognizer(Commands, COMMANDS_FILE, INDEX_OF_PROBABILITY)
+        self.__command_recognizer = CommandRecognizer(GeneralCommands, COMMANDS_FILE, INDEX_OF_PROBABILITY)
 
         self.__speech_string = ""
         self.__wake_word = VA_NAME
         self.__running = False
         self.__reminder_checker = ReminderChecker()
+
 
     def start(self) -> None:
         """
@@ -51,8 +49,9 @@ class VoiceAssistant:
         The main loop of the program. Launches the other modules and receives data from them.
         """
 
-        from App.Switcher.CommandSwitcher import Switcher
-        self.__command_switcher = Switcher(self)
+        from App.CommandsSwitcher.CommandSwitcher import CommandsSwitcher
+        self.__command_switcher = CommandsSwitcher(self)
+
         self.__running = True
         print("program started")
         self.__speech_receiver.wake_word_detection()
@@ -69,8 +68,16 @@ class VoiceAssistant:
             self.__command_switcher.switch(command, self.__speech_string)
     
     def get_request(self) -> str:
-        # старт записи речи с последующим выводом распознанной речи
-        # и удалением записанного в микрофон аудио
+        """
+        Эта функция осуществляет старт записи речи с последующим выводом распознанной речи
+        и удалением записанного в микрофон аудио
+        This function starts speech recording, then outputs the recognized speech
+        and removes the audio recorded in the microphone.
+
+        :return: string - распознанная речь
+        :return: string - recognized speech
+        """
+
         self.__speech_reproduces.reproduce_speech('Слушаю')
         speech_string = self.__speech_receiver.record_and_recognize_audio()
 
@@ -90,3 +97,4 @@ class VoiceAssistant:
 
     def reproduce_farewell_and_quit(self) -> None:
         self.__speech_reproduces.reproduce_farewell_and_quit()
+        self.stop_app()

@@ -76,20 +76,3 @@ class SoundController:
                 self.set_volume(max(0, current_volume - self.__volume_delta))
         elif command == VolumeCommands.failure:
             print('Incorrect command')
-
-'''
-def main():
-    sc = SoundController()
-    while True:
-        # Ввод процентного значения громкости от пользователя
-        command = str(input("Введите команду: "))
-
-        # Установка громкости
-        sc.execute(command)
-        print(sc.get_volume())
-
-
-
-if __name__ == "__main__":
-    main()
-'''

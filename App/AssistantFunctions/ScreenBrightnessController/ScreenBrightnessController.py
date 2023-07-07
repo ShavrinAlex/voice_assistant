@@ -55,19 +55,3 @@ class ScreenBrightnessController:
                 self.set_brightness(max(0, current_brightness - self.__bright_delta))
         elif command == ScreenBrightnessCommands.failure:
             print('Incorrect command')
-
-'''
-def main():
-    SCBC = ScreenBrightnessController()
-    while True:
-        # Ввод процентного значения яркости от пользователя
-        command = input("Введите команду: ")
-
-        # Установка громкости
-        SCBC.execute(command)
-        print(SCBC.get_brightness())
-
-
-if __name__ == "__main__":
-    main()
-'''

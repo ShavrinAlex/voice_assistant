@@ -1,29 +1,36 @@
+import json
+
 # машинное обучения для реализации возможности угадывания намерений
+# machine learning to implement the ability to guess intentions
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import LinearSVC
 
-import json
-from App.Utils.Enums import Commands
+# импортировать фильтр предупреждений
+# import warning filter
+from warnings import simplefilter
 
-
-# при добавлении новых команд стоит уменьшать этот показатель
-#INDEX_OF_PROBABILITY = 0.5
-#COMMANDS_FILE = 'App/Recognizer/Commands.json'
+# игнорировать все будущие предупреждения
+# ignore all future warnings
+simplefilter(action='ignore', category=FutureWarning)
 
 
 class Recognizer:
     """
-    Класс распознавателя команд в тексте пользовательского запроса, который включает в себя следующие поля:
-    The command recognizer class in the user request text, which includes the following fields:
+    Класс распознавателя в тексте пользовательского запроса, который включает в себя следующие поля:
+    The recognizer class in the user request text, which includes the following fields:
 
-    :field self.__vectorizer:
-    :field self.__classifier_probability:
-    :field self.__classifier:
+    :field self.__vectorizer: TfidfVectorizer -
+    :field self.__classifier_probability: LogisticRegression -
+    :field self.__classifier: LinearSVC -
+
+    :field self.__vectorizer: TfidfVectorizer -
+    :field self.__classifier_probability: LogisticRegression -
+    :field self.__classifier: LinearSVC -
     """
 
     def __init__(self, commands, commands_file: str, index_of_probability: float) -> None:
-        self.__commands = commands
+        self.commands = commands
         self.__commands_file = commands_file
         self.__index_of_probability = index_of_probability
         self.__vectorizer = TfidfVectorizer(analyzer="char", ngram_range=(2, 3))
@@ -33,8 +40,8 @@ class Recognizer:
 
     def prepare_corpus(self) -> None:
         """"
-        Подготовка модели для угадывания команды пользователя.
-        This method prepares the model for guessing the user's command.
+        В этом методе осуществляется подготовка модели для угадывания "команды" пользователя.
+        This method prepares the model for guessing the user's "command".
         """
         
         with open(self.__commands_file, encoding="UTF8") as file:
@@ -53,8 +60,8 @@ class Recognizer:
 
     def get_intent(self, user_request: str) -> any:
         """
-        Функция преобразования запроса пользователя (user_request) в команду.
-        This method converts a user request into a command.
+        Этот метод осуществляет преобразование запроса пользователя (user_request) в "команду".
+        This method converts a user request into a "command".
 
         :params user_request: строка - формулировка запроса пользователя
         :params user_request: string - the wording of the user's request
@@ -79,24 +86,24 @@ class Recognizer:
 
     def get_best_intent_in_list(self, intent_list: list):
         """
-        Получение наиболее подходящей команды из списка соответствий.
-        This method gets the most appropriate command from the list of matches.
+        Этот метод осуществляет получение наиболее подходящей "команды" из списка соответствий.
+        This method gets the most appropriate "command" from the list of matches.
 
         :params intent_list: список - все найденные соответствия
         :params intent_list: list - all matches found
 
-        :return: Command - the element of listing all commands
+        :return: "Command" - the element of listing all "commands"
         """
 
         if intent_list:
             intent_list.sort(key=lambda intent: intent[1])
-            return self.__commands[intent_list[-1][2]]
-        return self.__commands["failure"]
+            return self.commands[intent_list[-1][2]]
+        return self.commands["failure"]
     
     @staticmethod
     def format_print_intent_list(intent_list: list) -> None:
         """
-        Форматная печать всех соответствий с их коэфицентами совпадения.
+        Эта функция осуществляет форматную печать всех соответствий с их коэфицентами совпадения.
         This function performs format printing of all matches with their matching coefficients.
 
         :params intent_list: список - все найденные соответствия

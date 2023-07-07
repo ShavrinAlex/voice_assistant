@@ -2,13 +2,18 @@ from App.Recognizer.Recognizer import Recognizer
 
 
 class CommandRecognizer(Recognizer):
+    """
+    Класс распознование комманд пользователя для голосового ассистента
+    Class for recognition of user commands for a voice assistant
+    """
+
     def __init__(self, commands, commands_file: str, index_of_probability: float) -> None:
         super().__init__(commands, commands_file, index_of_probability)
 
     def get_command(self, user_input: str):
         """
-        Поиск наилучшего соответствия.
-        This method searches for the best match
+        Этот метод осуществляет поиск наилучшего соответствия.
+        This method searches for the best match.
 
         :params user_input: строка - пользовательский ввод, который необходимо
             преобразовать к команде.
@@ -35,5 +40,5 @@ class CommandRecognizer(Recognizer):
 
             best_intent = self.get_best_intent_in_list(intent_list)
             return best_intent
-        # else:
-        #     return self.__commands.failure
+        else:
+            return self.commands.failure

@@ -56,7 +56,7 @@ class SpeechReceiver:
                 print("Can you check if your microphone is on, please?")
                 return
 
-            # использование online-распознавания через Google
+            # использование online-распознавания через GoogleSearcher
             try:
                 print("Started recognition...")
                 recognized_data = self.__recognizer.recognize_google(audio, language="ru").lower()
