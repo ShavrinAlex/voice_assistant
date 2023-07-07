@@ -18,10 +18,10 @@ class CommandsSwitcher:
     def __init__(self, mediator: VoiceAssistant) -> None:
         self.__mediator = mediator
         self.__google_search = GoogleSearcher(self.__mediator)
-        self.__openApp = OpenApp()
+        self.__openApp = OpenApp(self.__mediator)
         self.__reminder = Reminder(self.__mediator)
-        self.__sound_controller = SoundController()
-        self.__brightness_controller = ScreenBrightnessController()
+        self.__sound_controller = SoundController(self.__mediator)
+        self.__brightness_controller = ScreenBrightnessController(self.__mediator)
         
     def switch(self, command: GeneralCommands, command_text: str) -> None:
         """

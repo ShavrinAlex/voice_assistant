@@ -17,7 +17,7 @@ EVENT_STORAGE = "App/AssistantFunctions/Reminder/storage.pkl"
 
 
 class Reminder:
-    def __init__(self, mediator: VoiceAssistant):
+    def __init__(self, mediator: VoiceAssistant) -> None:
         self.__mediator = mediator
         self.__vectorizer = TfidfVectorizer(analyzer="char", ngram_range=(2, 3))
         self.__classifier_probability = LogisticRegression()
