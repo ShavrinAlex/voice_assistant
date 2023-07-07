@@ -14,6 +14,8 @@ class Switcher:
         self.__google_search = None
         self.__openApp = None
         self.__reminder = None
+        self.__sound_controller = None
+        self.__brightness_controller = None
         
     def switch(self, command: Commands, command_text: str):
         if command == Commands.google_search:
@@ -27,8 +29,9 @@ class Switcher:
         elif command == Commands.farewell:
             return self.__mediator.reproduce_farewell_and_quit()
         elif (command == Commands.volume_settings):
-            sc = SoundController()
-            sc.execute(self.__speech_string)
+            if self.__sound_controller is None:
+                self.__sound_controller = SoundController()
+            self.__sound_controller.execute(command_text)
         elif (command == Commands.screen_brightness_settings):
             sbc = ScreenBrightnessController()
             sbc.execute(self.__speech_string)
