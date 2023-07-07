@@ -12,7 +12,7 @@ class Languages(Enum):
     EN = 4
 
 
-class Commands(Enum):
+class GeneralCommands(Enum):
     failure = 0
     greeting = 1
     farewell = 2

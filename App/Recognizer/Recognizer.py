@@ -4,12 +4,11 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.svm import LinearSVC
 
 import json
-from App.Utils.Enums import Commands
 
 
 # при добавлении новых команд стоит уменьшать этот показатель
 #INDEX_OF_PROBABILITY = 0.5
-#COMMANDS_FILE = 'App/Recognizer/Commands.json'
+#COMMANDS_FILE = 'App/Recognizer/GeneralCommands.json'
 
 
 class Recognizer:
@@ -23,7 +22,7 @@ class Recognizer:
     """
 
     def __init__(self, commands, commands_file: str, index_of_probability: float) -> None:
-        self.__commands = commands
+        self.commands = commands
         self.__commands_file = commands_file
         self.__index_of_probability = index_of_probability
         self.__vectorizer = TfidfVectorizer(analyzer="char", ngram_range=(2, 3))
@@ -90,8 +89,8 @@ class Recognizer:
 
         if intent_list:
             intent_list.sort(key=lambda intent: intent[1])
-            return self.__commands[intent_list[-1][2]]
-        return self.__commands["failure"]
+            return self.commands[intent_list[-1][2]]
+        return self.commands["failure"]
     
     @staticmethod
     def format_print_intent_list(intent_list: list) -> None:

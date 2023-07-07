@@ -2,7 +2,7 @@ from App.SpeechReceiver.SpeechReceiver import SpeechReceiver
 from App.SpeechReproducer.SpeechReproduser import SpeechReproducer
 from App.Recognizer.CommandRecognizer import CommandRecognizer
 from App.Utils.Config import VA_NAME
-from App.Utils.Enums import Commands
+from App.Utils.Enums import GeneralCommands
 import os  # working with the file system
 import datetime
 
@@ -38,7 +38,7 @@ class VoiceAssistant:
     def __init__(self):
         self.__speech_reproduces = SpeechReproducer()
         self.__speech_receiver = SpeechReceiver()
-        self.__command_recognizer = CommandRecognizer(Commands, COMMANDS_FILE, INDEX_OF_PROBABILITY)
+        self.__command_recognizer = CommandRecognizer(GeneralCommands, COMMANDS_FILE, INDEX_OF_PROBABILITY)
 
         self.__speech_string = ""
         self.__wake_word = VA_NAME
