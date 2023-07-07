@@ -22,6 +22,7 @@ Rules:
 8. pip install translate
 9. pip install screen_brightness_control
 10. pip install pycaw
+11. pip install AppOpener
 
 # Расширение функционала
 Чтобы добавить свой функционал не забудьте:
