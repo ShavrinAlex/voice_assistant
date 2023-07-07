@@ -4,7 +4,7 @@ from App.Recognizer.CommandRecognizer import CommandRecognizer
 from App.Utils.Enums import VolumeCommands
 
 
-COMMANDS_FILE = 'App/SoundController/Commands.json'
+COMMANDS_FILE = 'App/AssistantFunctions/SoundController/Commands.json'
 INDEX_OF_PROBABILITY = 0.3
 
 

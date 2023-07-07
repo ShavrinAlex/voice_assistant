@@ -20,6 +20,7 @@ class Commands(Enum):
     run_application = 4
     volume_settings = 5
     screen_brightness_settings = 6
+    create_promt = 7
 
 
 class VolumeCommands(Enum):

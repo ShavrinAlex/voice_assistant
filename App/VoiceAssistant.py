@@ -4,11 +4,13 @@ from App.Recognizer.CommandRecognizer import CommandRecognizer
 from App.Utils.Config import VA_NAME
 from App.Utils.Enums import Commands
 import os  # working with the file system
+import datetime
 
 
 # from typing import TYPE_CHECKING
 # if TYPE_CHECKING:
-    # from App.AssistantFunctions.Reminder import Reminder
+from App.AssistantFunctions.Reminder.ReminderChecker import ReminderChecker
+
 COMMANDS_FILE = 'App/Recognizer/config.json'
 INDEX_OF_PROBABILITY = 0.2
 
@@ -40,6 +42,8 @@ class VoiceAssistant:
 
         self.__speech_string = ""
         self.__wake_word = VA_NAME
+        self.__running = False
+        self.__reminder_checker = ReminderChecker()
 
     def start(self) -> None:
         """
@@ -47,44 +51,24 @@ class VoiceAssistant:
         The main loop of the program. Launches the other modules and receives data from them.
         """
 
+        from App.Switcher.CommandSwitcher import Switcher
+        self.__command_switcher = Switcher(self)
+        self.__running = True
         print("program started")
         self.__speech_receiver.wake_word_detection()
         self.__speech_reproduces.reproduce_greetings()
+        self.__reminder_checker.check_events()
 
-        while True:
-            # старт записи речи с последующим выводом распознанной речи
-            # и удалением записанного в микрофон аудио
+        while self.__running:
+            now = datetime.datetime.now()
+            if now.hour == 0 and now.minute == 0:
+                self.__reminder_checker.check_events()
+
             self.__speech_string = self.get_request()
-
             command = self.__command_recognizer.get_command(self.__speech_string)
-
-            # Перенести в CommandSwitcher
-            if (command == Commands.farewell):
-                self.__speech_reproduces.reproduce_farewell_and_quit()
-                break
-            elif (command == Commands.greeting):
-                self.__speech_reproduces.reproduce_greetings()
-            # elif (command == Command.failure):
-            #     self.__speech_reproduces.reproduce_failure_phrase()
-            elif (self.__speech_string == "напомни"):
-                from App.AssistantFunctions.Reminder import Reminder
-                rem = Reminder(self)
-                rem.create_promt()
-            elif (command == Commands.run_application):
-                from App.AppOpener.OpenApp import OpenApp
-                oa = OpenApp(self.__speech_string)
-                oa.open_app()
-            elif (command == Commands.volume_settings):
-                from App.SoundController.SoundController import SoundController
-                sc = SoundController()
-                sc.execute(self.__speech_string)
-            elif (command == Commands.screen_brightness_settings):
-                from App.ScreenBrightnessController.ScreenBrightnessController import ScreenBrightnessController
-                sbc = ScreenBrightnessController()
-                sbc.execute(self.__speech_string)
-
+            self.__command_switcher.switch(command, self.__speech_string)
     
-    def get_request(self):
+    def get_request(self) -> str:
         # старт записи речи с последующим выводом распознанной речи
         # и удалением записанного в микрофон аудио
         self.__speech_reproduces.reproduce_speech('Слушаю')
@@ -95,5 +79,14 @@ class VoiceAssistant:
         print(speech_string)
         return speech_string
     
-    def reproduce_speech(self, string_to_reproduce: str):
+    def reproduce_speech(self, string_to_reproduce: str) -> None:
         self.__speech_reproduces.reproduce_speech(string_to_reproduce)
+    
+    def stop_app(self) -> None:
+        self.__running = False
+    
+    def reproduce_greetings(self) -> None:
+        self.__speech_reproduces.reproduce_greetings()
+
+    def reproduce_farewell_and_quit(self) -> None:
+        self.__speech_reproduces.reproduce_farewell_and_quit()

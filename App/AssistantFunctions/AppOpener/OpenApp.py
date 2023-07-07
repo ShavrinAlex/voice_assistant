@@ -7,22 +7,21 @@ class OpenApp:
     """
     class that implements open applications on a computer
     """
-    def __init__(self,input_string):
-        self.__input_string = input_string
+    def __init__(self):
         self.__app = ""
         self.__command = ""
         self.__nonrequest_words = ["a", "the", "open", "find", "on", "computer", "please", "good", "evening", "morning", "afternoon", "night",
                                  "my","me","i","you","your","close","can","hi","hello","how","bad","are","am","is","for","would","want",
                                  "like","to","in","at","on","game","program","application"]
 
-    def __command_transform(self):
+    def __command_transform(self, input_string: str):
         """
         Converting a user command string to an application name string
         :return:
         """
 
         translator = translate.Translator("en","ru")
-        input_string_words = translator.translate(self.__input_string).lower()
+        input_string_words = translator.translate(input_string).lower()
         input_string_words = input_string_words.translate(str.maketrans('', '', string.punctuation))
         input_string_words = input_string_words.split()
         request_words = []
@@ -57,14 +56,14 @@ class OpenApp:
             pass
         pass
 
-    def open_app(self):
+    def open_app(self, input_string: str):
         """
         Method called to work with the class
         :return:
         """
 
         try:
-            self.__command_transform()
+            self.__command_transform(input_string)
             print(self.__command)
             print(self.__app)
             self.__find_app()
