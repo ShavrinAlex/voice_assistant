@@ -5,8 +5,8 @@ from App.Utils.Enums import Commands
 from App.AssistantFunctions.Google.GoogleSearch import GoogleSearch
 from App.AssistantFunctions.Reminder.Reminder import Reminder
 from App.AssistantFunctions.AppOpener.OpenApp import OpenApp
-from App.SoundController.SoundController import SoundController
-from App.ScreenBrightnessController.ScreenBrightnessController import ScreenBrightnessController
+from App.AssistantFunctions.SoundController.SoundController import SoundController
+from App.AssistantFunctions.ScreenBrightnessController.ScreenBrightnessController import ScreenBrightnessController
 
 class Switcher:
     def __init__(self, mediator: VoiceAssistant):
@@ -33,8 +33,9 @@ class Switcher:
                 self.__sound_controller = SoundController()
             self.__sound_controller.execute(command_text)
         elif (command == Commands.screen_brightness_settings):
-            sbc = ScreenBrightnessController()
-            sbc.execute(self.__speech_string)
+            if self.__brightness_controller is None:
+                self.__brightness_controller = ScreenBrightnessController()
+            self.__brightness_controller.execute(command_text)
     
     def search_google(self):
         if self.__google_search is None:

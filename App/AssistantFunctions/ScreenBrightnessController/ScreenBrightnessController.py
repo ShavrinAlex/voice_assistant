@@ -3,7 +3,7 @@ from App.Recognizer.CommandRecognizer import CommandRecognizer
 from App.Utils.Enums import ScreenBrightnessCommands
 
 
-COMMANDS_FILE = 'App/ScreenBrightnessController/Commands.json'
+COMMANDS_FILE = 'App/AssistantFunctions/ScreenBrightnessController/Commands.json'
 INDEX_OF_PROBABILITY = 0.4
 
 

@@ -4,14 +4,15 @@ from App.Recognizer.CommandRecognizer import CommandRecognizer
 from App.Utils.Config import VA_NAME
 from App.Utils.Enums import Commands
 import os  # working with the file system
+import datetime
 
 
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from App.Switcher.CommandSwitcher import Switcher
+# from typing import TYPE_CHECKING
+# if TYPE_CHECKING:
+from App.AssistantFunctions.Reminder.ReminderChecker import ReminderChecker
 
 COMMANDS_FILE = 'App/Recognizer/config.json'
-INDEX_OF_PROBABILITY = 0.5
+INDEX_OF_PROBABILITY = 0.2
 
 
 class VoiceAssistant:
@@ -41,8 +42,8 @@ class VoiceAssistant:
 
         self.__speech_string = ""
         self.__wake_word = VA_NAME
-        self.__command_switcher = Switcher(self)
         self.__running = False
+        self.__reminder_checker = ReminderChecker()
 
     def start(self) -> None:
         """
@@ -50,16 +51,20 @@ class VoiceAssistant:
         The main loop of the program. Launches the other modules and receives data from them.
         """
 
+        from App.Switcher.CommandSwitcher import Switcher
+        self.__command_switcher = Switcher(self)
         self.__running = True
         print("program started")
         self.__speech_receiver.wake_word_detection()
         self.__speech_reproduces.reproduce_greetings()
+        self.__reminder_checker.check_events()
 
         while self.__running:
-            # старт записи речи с последующим выводом распознанной речи
-            # и удалением записанного в микрофон аудио
-            self.__speech_string = self.get_request()
+            now = datetime.datetime.now()
+            if now.hour == 0 and now.minute == 0:
+                self.__reminder_checker.check_events()
 
+            self.__speech_string = self.get_request()
             command = self.__command_recognizer.get_command(self.__speech_string)
             self.__command_switcher.switch(command, self.__speech_string)
     
