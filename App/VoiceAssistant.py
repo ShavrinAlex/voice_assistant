@@ -10,6 +10,7 @@ from App.AssistantFunctions.Reminder.ReminderChecker import ReminderChecker
 
 COMMANDS_FILE = 'App/Recognizer/config.json'
 INDEX_OF_PROBABILITY = 0.2
+COUNT_DIALOGS = 2
 
 
 class VoiceAssistant:
@@ -41,7 +42,7 @@ class VoiceAssistant:
         self.__wake_word = VA_NAME
         self.__running = False
         self.__reminder_checker = ReminderChecker()
-
+        self.__first_dialog = True
 
     def start(self) -> None:
         """
@@ -52,21 +53,43 @@ class VoiceAssistant:
         from App.CommandsSwitcher.CommandSwitcher import CommandsSwitcher
         self.__command_switcher = CommandsSwitcher(self)
         self.__reminder_checker.check_events()
-
         self.__running = True
         print("program started")
-        self.__speech_receiver.wake_word_detection()
-        self.__speech_reproduces.reproduce_greetings()
 
         while self.__running:
             now = datetime.datetime.now()
             if now.hour == 0 and now.minute == 0:
                 self.__reminder_checker.check_events()
 
+            self.__speech_receiver.wake_word_detection()
+
+            if self.__first_dialog:
+                self.__speech_reproduces.reproduce_greetings()
+                self.__first_dialog = False
+
+            self.dialog()
+
+    def dialog(self) -> None:
+        """
+        Этот метод реализует общение с пользователем ограниченное число раз, в случае если все разы пользователь
+        не сказал ничего, то ассистент выходит из функции и снова ожидает активационную фразу, если же пользователь
+        дал команду, данный метод запускается рекурсивно
+        This method implements communication with the user a limited number of times, if the user
+        has not said anything all the times, the assistant exits the function and waits for the activation phrase again, if the user
+        has given a command, this method is run recursively
+        """
+
+        for i in range(COUNT_DIALOGS):
             self.__speech_string = self.get_request()
             command = self.__command_recognizer.get_command(self.__speech_string)
             self.__command_switcher.switch(command, self.__speech_string)
-    
+
+            if command == GeneralCommands.farewell:
+                return
+            if command != GeneralCommands.failure:
+                self.dialog()
+                return
+
     def get_request(self) -> str:
         """
         Эта функция осуществляет старт записи речи с последующим выводом распознанной речи
@@ -98,3 +121,6 @@ class VoiceAssistant:
     def reproduce_farewell_and_quit(self) -> None:
         self.__speech_reproduces.reproduce_farewell_and_quit()
         self.stop_app()
+
+    def reproduce_failure_phrase(self) -> None:
+        self.__speech_reproduces.reproduce_failure_phrase()

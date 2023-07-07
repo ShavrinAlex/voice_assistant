@@ -1,6 +1,7 @@
 from AppOpener import open, close
 import translate
 import string
+from App.VoiceAssistant import VoiceAssistant
 
 
 class OpenApp:
@@ -9,7 +10,8 @@ class OpenApp:
     Class that implements open applications on a computer
     """
 
-    def __init__(self) -> None:
+    def __init__(self, mediator: VoiceAssistant) -> None:
+        self.__mediator = mediator
         self.__app = ""
         self.__command = ""
         self.__nonrequest_words = ["a", "the", "open", "find", "on", "computer", "please", "good", "evening", "morning",
@@ -34,8 +36,8 @@ class OpenApp:
             if word not in self.__nonrequest_words:
                 request_words.append(word)
         if len(request_words) == 0:
-            # Exception Unknown command
-            pass
+            self.__mediator.reproduce_speech("К сожалению, я не не знаю такого приложения")
+            return
         self.__app = ' '.join(request_words)
 
     def __find_app(self) -> None:
@@ -50,12 +52,10 @@ class OpenApp:
             elif self.__command == "close":
                 close(self.__app,match_closest=True,throw_error=True)
             else:
-                print("exception")
-                #exeption Unknown command
+                self.__mediator.reproduce_speech("К сожалению, я не понимаю такой команды для работы с приложениями")
                 pass
         except:
-            print("exeption")
-            #Exception Unknown command
+            self.__mediator.reproduce_speech("К сожалению, я не понимаю такой команды для работы с приложениями")
             pass
         pass
 
@@ -72,4 +72,4 @@ class OpenApp:
             self.__find_app()
         except:
             print("exception")
-            #exception Unknown command
+            self.__mediator.reproduce_speech("К сожалению, я не понимаю такой команды для работы с приложениями")
