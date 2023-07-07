@@ -37,3 +37,11 @@ class ScreenBrightnessCommands(Enum):
     set_value = 1
     up = 2
     down = 3
+
+
+class AppOpenerCommands(Enum):
+    failure = 0
+    open = 1
+    close = 2
+    nonrequest = 3
+    request = 4
