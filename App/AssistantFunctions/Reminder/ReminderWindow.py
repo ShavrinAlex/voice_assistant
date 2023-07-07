@@ -31,5 +31,5 @@ class ReminderWindow(tk.Tk):
             event_remind_time = event[2]
             event_remind_time_for_output = "Напоминание за {} день".format(str(event_remind_time))
             output_string = "{} \n {} \n {}".format(event_message, event_date, event_remind_time_for_output)
-            mb.minsize(400, 80)
+            #mb.minsize(400, 80)
             mb.showinfo(self.__remind_title, output_string)

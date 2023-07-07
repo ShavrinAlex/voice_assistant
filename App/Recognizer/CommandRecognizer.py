@@ -36,7 +36,7 @@ class CommandRecognizer(Recognizer):
                         intent_list.append(request)
 
             intent_list.sort(key=lambda intent: intent[1])
-            # self.format_print_intent_list(intent_list)
+            #self.format_print_intent_list(intent_list)
 
             best_intent = self.get_best_intent_in_list(intent_list)
             return best_intent
