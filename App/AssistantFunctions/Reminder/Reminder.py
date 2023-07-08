@@ -4,6 +4,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import LinearSVC
 
+from App.Utils.Enums import DateCommands
 from App.VoiceAssistant import VoiceAssistant
 from datetime import datetime, timedelta
 import pickle
@@ -62,7 +63,7 @@ class Reminder:
             return request, best_intent_probability, best_intent
     
     @staticmethod
-    def get_best_intent_in_list(intent_list):
+    def get_best_intent_in_list(intent_list: list):
         """
         Получение наиболее подходящей команды из списка соответствий.
         :params intent_list: список - все найденные соответствия
@@ -70,8 +71,25 @@ class Reminder:
         """
         if intent_list:
             intent_list.sort(key=lambda intent: intent[1])
-            return intent_list[-1][2]
+            return DateCommands[intent_list[-1][2]].value
         return None
+
+    @staticmethod
+    def format_print_intent_list(intent_list: list) -> None:
+        """
+        Эта функция осуществляет форматную печать всех соответствий с их коэфицентами совпадения.
+        This function performs format printing of all matches with their matching coefficients.
+
+        :params intent_list: список - все найденные соответствия
+        :params intent_list: list - all matches found
+        """
+
+        if intent_list:
+            intent_list.sort(key=lambda intent: intent[1])
+            for request in intent_list:
+                print('<-\t {:65} | {:20} | {}'.format(request[0], request[1], request[2]), '\n')
+        else:
+            print('<-\t No recognized intents')
 
     def get_date(self, request: str) -> datetime:
         """
@@ -85,8 +103,10 @@ class Reminder:
             intent_list = []
             for word in text_parts:
                 intent_list.append(self.get_intent(word))
+            self.format_print_intent_list(intent_list)
             
             change_date = self.get_best_intent_in_list(intent_list)
+            print("change date", change_date)
             event_date = self.switch_change_date(event_date, change_date, self.recognize_num(request))         
             
         return event_date
@@ -94,8 +114,10 @@ class Reminder:
     @staticmethod
     def switch_change_date(event_date: datetime, change_date: int, recognized_nums: list) -> datetime:
         new_date = event_date
+        print("recognized nums", recognized_nums)
         # Месяц
-        if change_date in range(1, 13):     
+        if change_date in range(1, 13):    
+            print("in switch") 
             day = datetime.today().day
             month = change_date
             year = datetime.today().year
@@ -165,4 +187,5 @@ class Reminder:
         with open(EVENT_STORAGE, 'wb') as write_file:
             pickle.dump(event_storage, write_file)
         
-        self.__mediator.reproduce_speech("напоминание " + event_description + " на " + event_date.strftime("%d %B %Y, %A"))
+        self.__mediator.reproduce_speech("создано напоминание " + event_description + " на " + event_date.strftime("%d %B %Y, %A"))
+        print("напоминание", event_description, " на ", event_date.strftime("%d %B %Y, %A"))

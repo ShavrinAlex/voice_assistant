@@ -37,3 +37,28 @@ class ScreenBrightnessCommands(Enum):
     set_value = 1
     up = 2
     down = 3
+
+
+class DateCommands(Enum):
+    Monday = 20
+    Tuesday = 21
+    Wednesday = 22
+    Thursday = 23
+    Friday = 24
+    Saturday = 25
+    Sunday = 26
+    January = 1
+    February = 2
+    March = 3
+    April = 4
+    May = 5
+    June = 6
+    July = 7
+    August = 8
+    September = 9
+    October = 10
+    November = 11
+    December = 12
+    Today = 13
+    Tomorrow = 14
+    AfterTomorrow = 15
