@@ -1,6 +1,15 @@
 from AppOpener import open, close
 import translate
 import string
+from App.VoiceAssistant import VoiceAssistant
+from App.Recognizer.CommandRecognizer import CommandRecognizer
+from App.Utils.Enums import AppOpenerCommands
+
+
+COMMANDS_FILE = "App/AssistantFunctions/AppOpener/Commands.json"
+NONREQUEST_FILE = "App/AssistantFunctions/AppOpener/Nonrequest.json"
+INDEX_OF_PROBABILITY_COMMANDS = 0.5
+INDEX_OF_PROBABILITY_NONREQUEST = 0.54
 
 
 class OpenApp:
@@ -9,9 +18,12 @@ class OpenApp:
     Class that implements open applications on a computer
     """
 
-    def __init__(self) -> None:
+    def __init__(self, mediator: VoiceAssistant) -> None:
+        self.__mediator = mediator
         self.__app = ""
         self.__command = ""
+        self.__command_recognizer = CommandRecognizer(AppOpenerCommands, COMMANDS_FILE, INDEX_OF_PROBABILITY_COMMANDS)
+        self.__nonrequest_recognizer = CommandRecognizer(AppOpenerCommands, NONREQUEST_FILE, INDEX_OF_PROBABILITY_NONREQUEST)
         self.__nonrequest_words = ["a", "the", "open", "find", "on", "computer", "please", "good", "evening", "morning",
                                    "afternoon", "night", "my", "me", "i", "you", "your", "close", "can", "hi", "hello",
                                    "how", "bad", "are", "am", "is", "for", "would", "want", "like" ,"to", "in", "at",
@@ -23,20 +35,25 @@ class OpenApp:
         This method of converting a custom command line to an application name string
         """
 
-        translator = translate.Translator("en", "ru")
-        input_string_words = translator.translate(input_string).lower()
-        input_string_words = input_string_words.translate(str.maketrans('', '', string.punctuation))
+        command = self.__command_recognizer.get_command(input_string)
+        if command == AppOpenerCommands.open:
+            self.__command = "open"
+        elif command == AppOpenerCommands.close:
+            self.__command = "close"
+        #print(self.__command)
+        input_string_words = input_string.translate(str.maketrans('', '', string.punctuation))
         input_string_words = input_string_words.split()
         request_words = []
         for word in input_string_words:
-            if word == "open" or word == "close":
-                self.__command = word
-            if word not in self.__nonrequest_words:
+            probability = self.__nonrequest_recognizer.get_command(word)
+            #print(word,probability)
+            if probability != AppOpenerCommands.nonrequest:
                 request_words.append(word)
-        if len(request_words) == 0:
-            # Exception Unknown command
-            pass
         self.__app = ' '.join(request_words)
+        #print(self.__app)
+
+        translator = translate.Translator("en", "ru")
+        self.__app = translator.translate(self.__app).lower()
 
     def __find_app(self) -> None:
         """
@@ -50,12 +67,10 @@ class OpenApp:
             elif self.__command == "close":
                 close(self.__app,match_closest=True,throw_error=True)
             else:
-                print("exception")
-                #exeption Unknown command
+                self.__mediator.reproduce_speech("К сожалению, я не понимаю такой команды для работы с приложениями")
                 pass
         except:
-            print("exeption")
-            #Exception Unknown command
+            self.__mediator.reproduce_speech("К сожалению, я не понимаю такой команды для работы с приложениями")
             pass
         pass
 
@@ -72,4 +87,4 @@ class OpenApp:
             self.__find_app()
         except:
             print("exception")
-            #exception Unknown command
+            self.__mediator.reproduce_speech("К сожалению, я не понимаю такой команды для работы с приложениями")

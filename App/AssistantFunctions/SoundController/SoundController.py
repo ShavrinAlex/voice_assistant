@@ -2,6 +2,7 @@ from comtypes import CLSCTX_ALL
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 from App.Recognizer.CommandRecognizer import CommandRecognizer
 from App.Utils.Enums import VolumeCommands
+from App.VoiceAssistant import VoiceAssistant
 
 
 COMMANDS_FILE = 'App/AssistantFunctions/SoundController/Commands.json'
@@ -22,7 +23,8 @@ class SoundController:
     :field __volume: interface for working with the sound of the active output device
     """
 
-    def __init__(self, volume_delta=10) -> None:
+    def __init__(self, mediator: VoiceAssistant, volume_delta=10) -> None:
+        self.__mediator = mediator
         self.__devices = AudioUtilities.GetSpeakers()
         self.__interface = self.__devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
         self.__volume = self.__interface.QueryInterface(IAudioEndpointVolume)
@@ -33,7 +35,7 @@ class SoundController:
         try:
             return int(''.join(filter(str.isdigit, command_string)))
         except ValueError:
-            return self.get_volume()
+            return -1
 
     def mute(self) -> None:
         self.__volume.SetMute(1, None)
@@ -45,34 +47,49 @@ class SoundController:
         return int(self.__volume.GetMasterVolumeLevelScalar() * 100)
 
     def set_volume(self, volume_percentage: int) -> None:
-        if volume_percentage < 0 or volume_percentage > 100:
-            print('Incorrect volume value')
-            return
-        print(volume_percentage / 100)
         self.__volume.SetMasterVolumeLevelScalar(volume_percentage / 100, None)
 
     def execute(self, command_string: str) -> None:
         command = self.__cmd_recognizer.get_command(command_string)
         if command == VolumeCommands.set_value:
             volume_percentage = self.__get_volume_value(command_string)
-            self.set_volume(volume_percentage)
+            if 0 <= volume_percentage <= 100:
+                self.set_volume(volume_percentage)
+                self.__mediator.reproduce_speech(f"Громкость звука {volume_percentage}")
+            else:
+                self.__mediator.reproduce_speech("Некорректное значение громкости, повторите еще раз")
+
         elif command == VolumeCommands.mute:
+            self.__mediator.reproduce_speech("Звук выключен")
             self.mute()
+
         elif command == VolumeCommands.unmute:
             self.unmute()
+            self.__mediator.reproduce_speech("Звук включен")
+
         elif command == VolumeCommands.up:
             current_volume = self.get_volume()
-            volume_value = self.__get_volume_value(command_string)
-            if volume_value != current_volume:
-                self.set_volume(min(100, current_volume + volume_value))
-            else:
-                self.set_volume(min(100, current_volume + self.__volume_delta))
+            delta_volume_value = self.__get_volume_value(command_string)
+            if delta_volume_value == -1:
+                delta_volume_value = self.__volume_delta
+            new_volume_value = min(100, current_volume + delta_volume_value)
+            if new_volume_value == 100:
+                self.__mediator.reproduce_speech(f"Громкость звука будет повышена до ста")
+            self.set_volume(new_volume_value)
+            if new_volume_value != 100:
+                self.__mediator.reproduce_speech(f"Громкость звука повышена на {delta_volume_value}")
+
         elif command == VolumeCommands.down:
             current_volume = self.get_volume()
-            volume_value = self.__get_volume_value(command_string)
-            if volume_value != current_volume:
-                self.set_volume(max(0, current_volume - volume_value))
-            else:
-                self.set_volume(max(0, current_volume - self.__volume_delta))
+            delta_volume_value = self.__get_volume_value(command_string)
+            if delta_volume_value == -1:
+                delta_volume_value = self.__volume_delta
+            new_volume_value = max(0, current_volume - delta_volume_value)
+            if new_volume_value == 0:
+                self.__mediator.reproduce_speech(f"Громкость звука будет понижена до нуля")
+            self.set_volume(new_volume_value)
+            if new_volume_value != 0:
+                self.__mediator.reproduce_speech(f"Громкость звука понижена на {delta_volume_value}")
+
         elif command == VolumeCommands.failure:
-            print('Incorrect command')
+            self.__mediator.reproduce_speech("К сожалению, я не понимаю такой команды настройки звука")

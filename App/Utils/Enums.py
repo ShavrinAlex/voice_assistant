@@ -1,4 +1,4 @@
-from enum import Enum
+from enum import Enum, IntEnum
 
 
 # Enumeration classes for voice assistant configurations
@@ -39,7 +39,7 @@ class ScreenBrightnessCommands(Enum):
     down = 3
 
 
-class DateCommands(Enum):
+class DateCommands(IntEnum):
     Monday = 20
     Tuesday = 21
     Wednesday = 22
@@ -62,3 +62,11 @@ class DateCommands(Enum):
     Today = 13
     Tomorrow = 14
     AfterTomorrow = 15
+    
+
+class AppOpenerCommands(Enum):
+    failure = 0
+    open = 1
+    close = 2
+    nonrequest = 3
+    request = 4
