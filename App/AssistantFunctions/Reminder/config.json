@@ -1,5 +1,5 @@
 {
-    "date": {
+    "commands": {
         "Monday": {
             "examples": ["понедельник", "понедельнику"],
             "responses": 20
